@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import NameTitle from './NameTitle'
-import NameTitleEdit from './NameTitleEdit'
+import Profession from './Profession'
 import '../styles/Header.scss'
 
 function Header() {
-  const [firstName, setFirstName] = useState('Lovro')
-  const [lastName, setLastName] = useState('Zagar')
+  const [firstName, setFirstName] = useState('Forename')
+  const [lastName, setLastName] = useState('Surname')
+  const [profession, setProfession] = useState('Profession')
   const [isFirstOnEdit, setIsFirstOnEdit] = useState(false)
   const [isLastOnEdit, setIsLastOnEdit] = useState(false)
+  const [isProfessionOnEdit, setIsProfessionOnEdit] = useState(false)
   const [firstInputWidth, setFirstInputWidth] = useState(0)
   const [lastInputWidth, setLastInputWidth] = useState(0)
+  const [professionWidth, setProfessionWidth] = useState(0)
 
   // function
   function handleEdit(event, firstOrLast) {
@@ -35,36 +38,34 @@ function Header() {
 
   return (
     <header className='header'>
-      {isFirstOnEdit ? (
-        <NameTitleEdit
+      <div className='title'>
+        <NameTitle
           currentName={firstName}
           firstOrLast={'first'}
           width={firstInputWidth}
+          isOnEdit={isFirstOnEdit}
+          handleEdit={handleEdit}
           handleBlur={handleBlur}
           handleValueChange={handleValueChange}
         />
-      ) : (
         <NameTitle
-          currentName={firstName}
-          firstOrLast={'first'}
-          handleEdit={handleEdit}
-        />
-      )}
-      {isLastOnEdit ? (
-        <NameTitleEdit
           currentName={lastName}
-          firstOrLast={'last'}
+          firstOrLast={'second'}
           width={lastInputWidth}
+          isOnEdit={isLastOnEdit}
+          handleEdit={handleEdit}
           handleBlur={handleBlur}
           handleValueChange={handleValueChange}
         />
-      ) : (
-        <NameTitle
-          currentName={lastName}
-          firstOrLast={'last'}
-          handleEdit={handleEdit}
-        />
-      )}
+      </div>
+      <Profession
+        profession={profession}
+        setProfession={setProfession}
+        isProfessionOnEdit={isProfessionOnEdit}
+        setIsProfessionOnEdit={setIsProfessionOnEdit}
+        professionWidth={professionWidth}
+        setProfessionWidth={setProfessionWidth}
+      />
     </header>
   )
 }
