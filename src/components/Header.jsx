@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import NameTitle from './NameTitle'
 import Profession from './Profession'
 import '../styles/Header.scss'
+import Links from './Links'
+import uniqid from 'uniqid'
 
 function Header() {
   const [firstName, setFirstName] = useState('Forename')
@@ -66,6 +68,7 @@ function Header() {
         professionWidth={professionWidth}
         setProfessionWidth={setProfessionWidth}
       />
+      <Links />
     </header>
   )
 }

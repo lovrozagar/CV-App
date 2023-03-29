@@ -1,8 +1,26 @@
-import { TextField } from '@mui/material'
-import React from 'react'
+import { TextField, Fab, Button } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import CheckIcon from '@mui/icons-material/Check'
+import React, { useState } from 'react'
+import uniqid from 'uniqid'
 
-function Links(props) {
-  const { links, setLinks, areLinksOnEdit, setAreLinksOnEdit } = props
+function Links() {
+  const defaultLinks = [
+    {
+      url: 'ninja@ninjamail.com',
+      placeholder: 'NinjaMail',
+      id: uniqid(),
+    },
+    {
+      url: 'https://github.com/lovrozagar',
+      placeholder: 'NinjaGitHub',
+      id: uniqid(),
+    },
+  ]
+  const [links, setLinks] = useState(defaultLinks)
+  const [areLinksOnEdit, setAreLinksOnEdit] = useState(false)
 
   function urlOrMail(input) {
     const regex = /^\S+@\S+\.\S+$/ // guess if link is mail
@@ -11,23 +29,99 @@ function Links(props) {
     return isEmail ? `mailto:${input}` : input
   }
 
+  function handleClick(e) {
+    if (!e.ctrlKey) {
+      e.preventDefault()
+      setAreLinksOnEdit(!areLinksOnEdit)
+    }
+  }
+
+  function toggleEditMode() {
+    setAreLinksOnEdit(!areLinksOnEdit)
+    deleteEmptyLinks()
+    !links.length && setLinks(defaultLinks)
+  }
+
+  function deleteEmptyLinks() {
+    setLinks((prevLinks) =>
+      prevLinks.filter((link) => {
+        return link.url && link.placeholder && link.id
+      })
+    )
+  }
+
+  function handleUrlChange(e, linkId) {
+    setLinks((links) =>
+      links.map((link) => {
+        return link.id === linkId ? { ...link, url: e.target.value } : link
+      })
+    )
+  }
+
+  function handlePlaceholderChange(e, linkId) {
+    setLinks((links) =>
+      links.map((link) => {
+        return link.id === linkId
+          ? { ...link, placeholder: e.target.value }
+          : link
+      })
+    )
+  }
+
+  function handleLinkDelete(linkId) {
+    setLinks((prevLinks) => prevLinks.filter((link) => link.id !== linkId))
+  }
+
+  function handleLinkAdd() {
+    setLinks((links) => [...links, { url: '', placeholder: '', id: uniqid() }])
+    console.log(links)
+  }
   return (
     <div className='links'>
       {areLinksOnEdit ? (
-        <div
-          style={{
-            width: '100%',
-          }}
-        >
-          <TextField
-            value={links}
-            label='Links, full URL + optional placeholder, comma separated, example: github.com/user/ninja GitHub, ninja@gmail.com'
-            onChange={(e) => setLinks(e.target.value)}
-            onBlur={() => setAreLinksOnEdit(!areLinksOnEdit)}
-            sx={{
-              width: '100%',
+        <div style={{ display: 'grid', gap: '1rem' }}>
+          <p>Slicing... Links</p>
+          {links.map((link) => (
+            <div
+              key={link.id}
+              style={{
+                display: 'grid',
+                gap: '0.5rem',
+                gridTemplateColumns: '1fr auto auto',
+              }}
+            >
+              <TextField
+                label='Full URL or Email'
+                defaultValue={link.url}
+                onChange={(e) => handleUrlChange(e, link.id)}
+              />
+              <TextField
+                label='Placeholder'
+                defaultValue={link.placeholder}
+                onChange={(e) => handlePlaceholderChange(e, link.id)}
+              />
+              <Button onClick={() => handleLinkDelete(link.id)}>
+                <DeleteIcon />
+              </Button>
+            </div>
+          ))}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
             }}
-          />
+          >
+            <Button size='small' aria-label='add' onClick={handleLinkAdd}>
+              <AddIcon />
+            </Button>
+            <Button
+              size='small'
+              aria-label='toggle visibility'
+              onClick={toggleEditMode}
+            >
+              <VisibilityOffIcon />
+            </Button>
+          </div>
         </div>
       ) : (
         <div
@@ -38,24 +132,15 @@ function Links(props) {
             gap: '1rem',
           }}
         >
-          {links.split(',').map((link, index) => {
-            const [linkItem, placeholderItem] = link.trim('').split(' ')
+          {links.map((link) => {
             return (
               <a
-                key={index}
-                className='link'
-                href={urlOrMail(linkItem)}
-                rel='noreferrer'
+                href={urlOrMail(link.url)}
                 target='_blank'
-                onClick={(e) => {
-                  setAreLinksOnEdit(!areLinksOnEdit)
-                }}
-                style={{
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
+                rel='noreferrer'
+                onClick={handleClick}
               >
-                {placeholderItem ? placeholderItem : linkItem}
+                {link.placeholder}
               </a>
             )
           })}
