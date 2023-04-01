@@ -1,14 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import InlineList from './InlineList'
 import ListEdit from './ListEdit'
 import uniqid from 'uniqid'
 
 function Skills({ onEdit, onEditStart, onEditEnd }) {
-  const [skills, setSkills] = useState([
-    { name: 'Sneaking', id: uniqid() },
-    { name: 'Sword fighting', id: uniqid() },
-    { name: 'Fruit slicing', id: uniqid() },
-  ])
+  const defaultSkills = useMemo(
+    () => [
+      { name: 'Sneaking', id: uniqid() },
+      { name: 'Sword fighting', id: uniqid() },
+      { name: 'Fruit slicing', id: uniqid() },
+    ],
+    []
+  )
+
+  const [skills, setSkills] = useState(defaultSkills)
+
+  useEffect(() => {
+    if (skills.length === 0) {
+      setSkills(defaultSkills)
+    }
+  }, [skills, defaultSkills])
 
   function removeEmptySkills() {
     setSkills((prevSkills) => prevSkills.filter((skill) => skill.name.trim()))

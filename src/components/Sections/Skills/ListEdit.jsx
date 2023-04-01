@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyledInput } from '../../styled/styledInputs'
+import { GridContainer } from '../../styled/GridContainer'
 import { Button } from '@mui/material'
 import uniqid from 'uniqid'
 
@@ -28,10 +29,6 @@ function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
     'fire manipulation',
   ]
 
-  function randomNinjaSkill() {
-    return ninjaSkills[Math.floor(Math.random() * ninjaSkills.length)]
-  }
-
   function handleAdd() {
     setSkills([...skills, { name: '', id: uniqid() }])
   }
@@ -51,16 +48,18 @@ function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
 
   return (
     <div>
-      <div>
-        {skills.map((skill) => (
+      <GridContainer>
+        {skills.map((skill, index) => (
           <StyledInput
             key={skill.id}
             defaultValue={skill.name}
-            placeholder={`E.g. ${randomNinjaSkill()}`}
+            placeholder={`E.g. ${
+              ninjaSkills.length > index ? ninjaSkills[index] : 'other skill'
+            }`}
             onChange={(e) => handleSkillChange(e, skill.id)}
           />
         ))}
-      </div>
+      </GridContainer>
       <Button onClick={handleAdd}>Add skill</Button>
       <Button onClick={handleDone}>Done</Button>
     </div>
