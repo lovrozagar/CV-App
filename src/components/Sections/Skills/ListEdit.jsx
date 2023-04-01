@@ -1,7 +1,11 @@
 import { StyledInput } from '../../styled/styledInputs'
-import { GridContainer } from '../../styled/GridContainer'
-import { Button } from '@mui/material'
+import { GridContainer } from '../../Containers/GridContainer'
 import { StyledDeleteButton } from '../../styled/StyledButtons'
+import {
+  StyledPrimaryButton,
+  StyledSecondaryButton,
+} from '../../styled/StyledButtons'
+import ButtonsContainer from '../../Containers/ButtonsContainer'
 import StyledOffPrintContainer from '../../styled/Containers/StyledOffPrintContainer'
 import uniqid from 'uniqid'
 
@@ -72,8 +76,10 @@ function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
           </StyledOffPrintContainer>
         ))}
       </GridContainer>
-      <Button onClick={handleAdd}>Add skill</Button>
-      <Button onClick={handleDone}>Done</Button>
+      <ButtonsContainer>
+        <StyledPrimaryButton onClick={handleAdd}>Add skill</StyledPrimaryButton>
+        <StyledSecondaryButton onClick={handleDone}>Done</StyledSecondaryButton>
+      </ButtonsContainer>
     </div>
   )
 }
