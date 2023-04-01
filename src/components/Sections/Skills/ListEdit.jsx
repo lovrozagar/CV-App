@@ -1,7 +1,8 @@
-import React from 'react'
 import { StyledInput } from '../../styled/styledInputs'
 import { GridContainer } from '../../styled/GridContainer'
 import { Button } from '@mui/material'
+import { StyledDeleteButton } from '../../styled/StyledButtons'
+import StyledOffPrintContainer from '../../styled/Containers/StyledOffPrintContainer'
 import uniqid from 'uniqid'
 
 function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
@@ -33,6 +34,13 @@ function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
     setSkills([...skills, { name: '', id: uniqid() }])
   }
 
+  function handleDelete(id) {
+    if (skills.length === 1)
+      setSkills(skills.map((skill) => ({ ...skill, name: '' })))
+    else setSkills(skills.filter((skill) => skill.id !== id))
+    console.log(skills)
+  }
+
   function handleDone() {
     removeEmptySkills()
     onEditEnd()
@@ -50,14 +58,18 @@ function ListEdit({ skills, setSkills, onEditEnd, removeEmptySkills }) {
     <div>
       <GridContainer>
         {skills.map((skill, index) => (
-          <StyledInput
-            key={skill.id}
-            defaultValue={skill.name}
-            placeholder={`E.g. ${
-              ninjaSkills.length > index ? ninjaSkills[index] : 'other skill'
-            }`}
-            onChange={(e) => handleSkillChange(e, skill.id)}
-          />
+          <StyledOffPrintContainer key={skill.id}>
+            <StyledInput
+              value={skill.name}
+              placeholder={`E.g. ${
+                ninjaSkills.length > index ? ninjaSkills[index] : 'other skill'
+              }`}
+              onChange={(e) => handleSkillChange(e, skill.id)}
+            />
+            <StyledDeleteButton
+              onDelete={() => handleDelete(skill.id)}
+            ></StyledDeleteButton>
+          </StyledOffPrintContainer>
         ))}
       </GridContainer>
       <Button onClick={handleAdd}>Add skill</Button>

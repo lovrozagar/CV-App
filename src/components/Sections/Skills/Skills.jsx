@@ -12,17 +12,14 @@ function Skills({ onEdit, onEditStart, onEditEnd }) {
     ],
     []
   )
-
   const [skills, setSkills] = useState(defaultSkills)
 
   useEffect(() => {
-    if (skills.length === 0) {
-      setSkills(defaultSkills)
-    }
-  }, [skills, defaultSkills])
+    if (skills.length === 0) setSkills([{ name: '', id: uniqid() }])
+  }, [skills])
 
   function removeEmptySkills() {
-    setSkills((prevSkills) => prevSkills.filter((skill) => skill.name.trim()))
+    setSkills((skills) => skills.filter((skill) => skill.name.trim()))
   }
 
   return (
